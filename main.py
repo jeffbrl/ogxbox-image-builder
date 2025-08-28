@@ -71,6 +71,7 @@ def process_zip_archive(zip_file_path: str) -> Generator:
 
 
 def main() -> int:
+    #breakpoint()
     if os.path.exists(args.image_filename):
         os.remove(args.image_filename)
 
@@ -84,8 +85,7 @@ def main() -> int:
     else:
         disk_size = args.size * 1024 * 1024 * 1024 # convert to GB
      
-    # In case /tmp is space-constrained, put the large temp file in the current directory
-    temp_disk_filename = tempfile.NamedTemporaryFile(dir=str(Path.cwd()), delete=True).name
+    temp_disk_filename = args.image_filename + '.tmp'
     
     print(f'Creating {int(disk_size / 1024 / 1024 / 1024)}G image...')   
     Fatx.create(temp_disk_filename, disk_size)
@@ -133,12 +133,13 @@ def main() -> int:
             print("Conversion to qccow2 succeeded.")    
         else:
             print("Conversion to qccow2 failed.")
-    
-        os.unlink(temp_disk_filename)
         
+        try:
+            os.unlink(temp_disk_filename)
+        except FileNotFoundError:
+            pass
     else:
-        os.rename(temp_disk_filename, args.image_filename)
-        
+        os.rename(temp_disk_filename, args.image_filename) 
     return 0
 
 if __name__ == '__main__':
