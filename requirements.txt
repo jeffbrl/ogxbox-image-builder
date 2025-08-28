@@ -1,0 +1,2 @@
+pycparser==2.22
+pyfatx==0.0.7
