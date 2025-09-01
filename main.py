@@ -69,7 +69,6 @@ def process_zip_archive(zip_file_path: str) -> Generator:
         for file_name in file_list:
             yield (file_name, zip_ref.read(file_name))
 
-
 def main() -> int:
     #breakpoint()
     if os.path.exists(args.image_filename):
@@ -87,6 +86,11 @@ def main() -> int:
      
     temp_disk_filename = args.image_filename + '.tmp'
     
+    try:
+        os.unlink(temp_disk_filename)
+    except FileNotFoundError:
+        pass
+
     print(f'Creating {int(disk_size / 1024 / 1024 / 1024)}G image...')   
     Fatx.create(temp_disk_filename, disk_size)
     fat_c = Fatx(temp_disk_filename, drive='c')
@@ -103,27 +107,34 @@ def main() -> int:
         
     #if args.f:
     #    data.append(args.f, fat_f)
+    
         
     for zip_archive, fat in data:
         
-        for entry_from_archive,file_content in process_zip_archive(zip_archive):
+        try:
+
+            for entry_from_archive,file_content in process_zip_archive(zip_archive):
         
-            name = Path(entry_from_archive).name
-            valid, error = is_vfat_filename_valid(name)
-            if not valid:
-                print(f"{error}: {entry_from_archive}")
-                continue
+                name = Path(entry_from_archive).name
+                valid, error = is_vfat_filename_valid(name)
+                if not valid:
+                    print(f"{error}: {entry_from_archive}")
+                    continue
         
-            # Check for directory
-            try:
-                if entry_from_archive[-1] == '/':
-                    fat.mkdir(entry_from_archive[:-1])
-                else:
-                    fat.write(path=entry_from_archive, content=file_content)
-            except AssertionError:
-                print(f"AssertionError on write(): {entry_from_archive}")
-                continue
-        del(fat)
+                # Check for directory
+                try:
+                    if entry_from_archive[-1] == '/':
+                        fat.mkdir(entry_from_archive[:-1])
+                    else:
+                        fat.write(path=entry_from_archive, content=file_content)
+                except AssertionError:
+                    print(f"AssertionError on write(): {entry_from_archive}")
+                    continue
+            del(fat)
+
+        except FileNotFoundError:
+            print(f"{zip_archive} not found. Skipping...")
+            continue
 
     
     # Convert to sparse qcow2 (slow)
