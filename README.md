@@ -1,9 +1,6 @@
 # OGXbox Image Builder (`ogxbox-image-builder`)
 
-<div style="display: flex; justify-content: space-between;">
-  <img src="media/flubber_small.jpg" alt="Flubber" style="width: 49%;" />
-  <img src="media/builder_small.png" alt="Builder" style="height: 169px; width: 49%;" />
-</div>
+![ogxbox-image-builder logo](media/builer_flubber.png)
 
 A python script to automate the creation of raw (`.img`) and QCOW2 (`.qcow2`) disk images for the original Xbox, suitable for use with emulators like xemu. The repository includes wrapper scripts in bash and powershell to simplify the execution of ogxbox-image-builder in a docker container
 
