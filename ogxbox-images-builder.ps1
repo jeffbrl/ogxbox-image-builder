@@ -39,7 +39,7 @@ if ($Type) {
 }
 
 # Construct the full Docker command
-$dockerCommand = "docker run --rm -v $(Get-Location)/main.py:/app/main.py -v $(Get-Location):/data jeffbrl/ogxbox-image-builder python3 /app/main.py $builderArgs"
+$dockerCommand = "docker run --rm -v $(Get-Location):/data jeffbrl/ogxbox-image-builder python3 /app/main.py $builderArgs"
 
 # Execute the command
 Invoke-Expression $dockerCommand
