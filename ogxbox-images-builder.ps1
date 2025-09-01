@@ -2,11 +2,12 @@ param(
     [string]$Size,
     [string]$Output,
     [string]$Czip,
-    [string]$Ezip
+    [string]$Ezip,
+    [string]$Type
 )
 
 function usage {
-    Write-Error "Usage: $PSScriptRoot\script.ps1 -o <output_image> [-s <size_in_GB>] [-c <c_zip_file>] [-e <e_zip_file>]"
+    Write-Error "Usage: $PSScriptRoot\script.ps1 -o <output_image> [-t raw|qcow2] [-s <size_in_GB>] [-c <c_zip_file>] [-e <e_zip_file>]"
     exit 1
 }
 
@@ -17,7 +18,7 @@ if (-not $Output) {
     exit 1
 }
 
-$builderArgs = "/data/$Output"
+$builderArgs = "/data/$Output "
 
 if (-not $Size) {
     Write-Host "Output image size not specified... defaulting to 8GB"
@@ -26,11 +27,15 @@ if (-not $Size) {
 $builderArgs += " -s $Size"
 
 if ($Czip) {
-    $builderArgs += " -c /data/$Czip"
+    $builderArgs += " -c /data/$Czip "
 }
 
 if ($Ezip) {
-    $builderArgs += " -e /data/$Ezip"
+    $builderArgs += " -e /data/$Ezip "
+}
+
+if ($Type) {
+    $builderArgs += " -t $Type "
 }
 
 # Construct the full Docker command
