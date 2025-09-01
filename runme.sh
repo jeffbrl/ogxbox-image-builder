@@ -45,7 +45,5 @@ if [[ -n "$ezip" ]]; then
     builder_args+="-e /data/$ezip "
 fi
 
-echo $builder_args
-
 docker run --rm -v $(pwd)/main.py:/app/main.py \
 -v $(pwd):/data jeffbrl/ogxbox-image-builder python3 /app/main.py $builder_args
