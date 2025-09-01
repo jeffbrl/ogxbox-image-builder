@@ -136,14 +136,15 @@ def main() -> int:
             print(f"{zip_archive} not found. Skipping...")
             continue
 
-    
     # Convert to sparse qcow2 (slow)
     if args.type == 'qcow2':
-        retval = subprocess.call(["qemu-img", "convert", "-f raw", "-O qcow2", temp_disk_filename, args.image_filename])
-        if retval == 0:
+        command = f"qemu-img convert -f raw -O qcow2 {temp_disk_filename} {args.image_filename}"
+        retval = subprocess.run(command, shell=True, capture_output=True)
+        if retval.returncode == 0:
             print("Conversion to qccow2 succeeded.")    
         else:
             print("Conversion to qccow2 failed.")
+            print(retval.stderr)
         
         try:
             os.unlink(temp_disk_filename)
