@@ -2,7 +2,7 @@
 
 usage() { echo "Usage: $0 [-t <output_image_type> raw|qcow2] [-s <size_in_GB>] [-c <c_zip_file>] [-e <e_zip_file] -o <output_image>" 1>&2; exit 1; }
 
-while getopts ":s::o:c::e::t:" o; do
+while getopts ":s::o:c::e::t::" o; do
     case "${o}" in
         s)
             size=${OPTARG}
