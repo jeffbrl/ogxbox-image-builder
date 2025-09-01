@@ -1,8 +1,8 @@
 #!/bin/bash
 
-usage() { echo "Usage: $0 [-s <size_in_GB>] [-c <c_zip_file>] [-e <e_zip_file] -o <output_image>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-t <output_image_type> raw|qcow2] [-s <size_in_GB>] [-c <c_zip_file>] [-e <e_zip_file] -o <output_image>" 1>&2; exit 1; }
 
-while getopts ":s::o:c::e::" o; do
+while getopts ":s::o:c::e::t::" o; do
     case "${o}" in
         s)
             size=${OPTARG}
@@ -15,6 +15,9 @@ while getopts ":s::o:c::e::" o; do
             ;;
         e)
             ezip=${OPTARG}
+            ;;
+        t)
+            image_type=${OPTARG}
             ;;
         *)
             usage
@@ -43,6 +46,10 @@ fi
 
 if [[ -n "$ezip" ]]; then
     builder_args+="-e /data/$ezip "
+fi
+
+if [[ -n "$image_type" ]]; then
+    builder_args+="-t $image_type "
 fi
 
 docker run --rm -v $(pwd):/data jeffbrl/ogxbox-image-builder python3 /app/main.py $builder_args
