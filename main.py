@@ -70,7 +70,7 @@ def process_zip_archive(zip_file_path: str) -> Generator:
             yield (file_name, zip_ref.read(file_name))
 
 def main() -> int:
-    #breakpoint()
+    
     if os.path.exists(args.image_filename):
         os.remove(args.image_filename)
 
