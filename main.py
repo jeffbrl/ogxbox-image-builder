@@ -61,10 +61,8 @@ def process_zip_archive(zip_file_path: str) -> Generator:
     Returns:
         Tuple of filename (str), file_contents (bytes)
     """
-    file_contents = {}
-
     with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-        file_list = zip_ref.namelist()
+        file_list = sorted(zip_ref.namelist(), key=lambda x: (x.count('/'), x))
 
         for file_name in file_list:
             yield (file_name, zip_ref.read(file_name))
@@ -138,12 +136,11 @@ def main() -> int:
 
     # Convert to sparse qcow2 (slow)
     if args.type == 'qcow2':
-        command = f"qemu-img convert -f raw -O qcow2 {temp_disk_filename} {args.image_filename}"
-        retval = subprocess.run(command, shell=True, capture_output=True)
+        retval = subprocess.run(["qemu-img", "convert", "-f", "raw", "-O", "qcow2", temp_disk_filename, args.image_filename], capture_output=True, text=True)
         if retval.returncode == 0:
-            print("Conversion to qccow2 succeeded.")    
+            print("Conversion to qcow2 succeeded.")    
         else:
-            print("Conversion to qccow2 failed.")
+            print("Conversion to qcow2 failed.")
             print(retval.stderr)
         
         try:
