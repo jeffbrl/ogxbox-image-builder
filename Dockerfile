@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 as builder
+FROM ubuntu:24.04 AS builder
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -qy \
         build-essential pkg-config libfuse-dev cmake git \
