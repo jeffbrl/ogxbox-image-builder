@@ -1,11 +1,16 @@
 FROM ubuntu:24.04 AS builder
-RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -qy \
-        build-essential pkg-config libfuse-dev cmake git \
-        python3 python3-pip qemu-utils \
- && git clone https://github.com/mborgerson/fatx.git /usr/src/fatx
 
- WORKDIR /usr/src/fatx
+RUN apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -qy \
+        build-essential pkg-config libfuse-dev cmake git \
+        python3 python3-pip qemu-utils 
+
+RUN git clone https://github.com/XboxDev/fatx.git /usr/src/fatx \
+  && cd /usr/src/fatx \
+  && git fetch https://github.com/xmutantson/fatx.git libfatx-grow-directories:libfatx-grow-directories \
+  && git checkout libfatx-grow-directories
+
+WORKDIR /usr/src/fatx
 
 # Build libfatx
 RUN cmake -Blibfatx_build -Slibfatx \
