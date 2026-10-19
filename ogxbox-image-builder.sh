@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 
 usage() { echo "Usage: $0 [-t <output_image_type> raw|qcow2] [-s <size_in_GB>] [-c <c_zip_file>] [-e <e_zip_file] -o <output_image>" 1>&2; exit 1; }
 
@@ -52,4 +52,6 @@ if [[ -n "$image_type" ]]; then
     builder_args+="-t $image_type "
 fi
 
-docker run --rm -v $(pwd)/main.py:/app/main.py -v $(pwd):/data jeffbrl/ogxbox-image-builder python3 /app/main.py $builder_args
+docker run --rm -v $(pwd)/main.py:/app/main.py -v $(pwd):/data docker.io/jeffbrl/ogxbox-image-builder python3 /app/main.py $builder_args
+
+echo "all done"
